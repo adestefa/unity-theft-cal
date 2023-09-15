@@ -1,0 +1,211 @@
+<html>
+    <head>
+        <title>Unity Theft Calculator</title>
+        <style>
+            p { width: 95%; }
+           
+            #main { 
+                width: 340px;
+                position : relative;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 20px;
+                border: 2px solid black;
+                padding: 20px;
+
+            }
+            #btn { 
+                width: 100px; 
+                margin-left : 50px;
+                }
+           
+            #result {
+                margin-left:3px;
+                border : 1px solid black;
+                width : 290px;
+                padding : 5px;
+                text-align: center;
+            }
+            #z {
+                text-align: center;
+            }
+           
+        </style>
+    </head>
+    <body>
+        <div id="main">
+        <h1>Unity Theft Calculator</h1>
+
+         <p>
+            With Unity's <a target="_blank" href="https://blog.unity.com/news/plan-pricing-and-packaging-updates">new plan</a>, developers who use Unity's free tier of development services would owe Unity $0.20 per installation once their game hit thresholds of 200,000 downloads and earn $200,000 in revenue.
+            Steam also takes a 30% cut of all sales. 
+        </p>
+         <p></p>
+
+        <div>
+            <form>
+            <table>
+                
+                <!--  price of game downloaded-->
+                <tr><td title="Game price">Price</td><td><input type="text" name="price" id="price" value="5" size="20" />
+                
+                <!-- number of installs -->
+                <tr><td title="Num of installs">
+                    Installs</td><td><input type="text" name="installs" id="installs" value="200,000" size="20" />
+                    <!-- <input type="button" value="format" onclick="formatNumber(document.getElementById('installs'))" /> -->
+                </td></tr>
+                
+                <!-- Unity install tax rate -->
+                <tr><td title="Unity theft rate" >Rate</td><td><input type="text" name="rate"id="rate" value="0.20" size="20" /></td></tr>
+                
+                <!-- submit button -->
+                <tr><td colspan="2"><input type="button" value="Calculate" size="50" id="btn" onclick="cal()" /></td></tr>
+            </table>            
+            </form>
+        </div>
+
+        <div id="result">
+           
+            <b>Revenue:</b> <span id="revenue">0</span><br /><br />
+            
+            <b><i>STOLEN</i>:</b> <i><u><span id="stolen">0</span></u></i><br /><br />
+
+            <b>Steam's cut:</b> <span id="steam">0</span><br /><br />
+           
+            <b>What's left:</b> <span id="left">0</span>
+           
+        </div>
+        
+    
+
+<div>
+
+<pre>
+_______________________________________
+|                |                      |
+| Installs       | Dollars per Bracket  |
+|----------------|----------------------|
+| 200,000        | $40,000              |
+| 500,000        | $100,000             |
+| 1,000,000      | $200,000             |
+| 2,500,000      | $500,000             |
+| 5,000,000      | $1,000,000           |
+| 10,000,000     | $2,000,000           |
+| 25,000,000     | $5,000,000           |
+|----------------|----------------------|
+</pre>
+
+<!-- <p id="z">Zuul 2023</p> -->
+</div>
+
+
+</div>
+        <script>
+
+           
+            /**
+             * Calculate the cost of Unity's new plan
+             *  - $0.20 for every install
+             *  - let's also calculate the revenue
+             */
+            function cal() {
+                
+                // remove any formatting
+                var price = document.getElementById("price").value.toString().replace(/[^0-9.]/g, '');
+                
+                var installs = document.getElementById("installs").value.toString().replace(/[^0-9.]/g, '');
+                
+                var rate  = document.getElementById("rate").value;
+    
+                console.log("Installs:" + installs);
+                console.log("Rate:" + rate);
+
+                // calculate revenue based on price and installs
+                var revenue = (price * installs);
+            
+                // calculate 0.20 cents for each install
+                var stolen = (rate * installs);
+                
+                 // calculate steam's cut
+                 var steam = (revenue * 0.30);
+
+                 var left_steam = (revenue - steam);
+               
+                // calculate what's left
+                var left = (left_steam - stolen);
+
+                console.log("Revenue:" + revenue);
+                console.log("Stolen: " + stolen);
+                console.log("Steam: " + steam);
+                console.log("Left: " + left);
+               
+                // update the dom with the new value
+                revenue = formatCurrency(revenue);
+                document.getElementById('revenue').innerHTML=revenue;
+
+                // update the dom with the new value
+                stolen = formatCurrency(stolen);
+                document.getElementById('stolen').innerHTML=stolen;
+
+                // update steam's cut
+                steam = formatCurrency(steam);
+                document.getElementById('steam').innerHTML=steam;
+
+                // update what's left
+                left = formatCurrency(left);
+                document.getElementById('left').innerHTML=left;
+
+                // format the install number
+                formatNumber(document.getElementById('installs'));
+
+            }
+
+            
+            // Given a number input will return formated currency
+            function formatCurrency(inputValue) {
+                
+                let floatValue = parseFloat(inputValue);
+                
+                // Check if the input is a valid number
+                if (!isNaN(floatValue)) {
+                    // Format the number as a currency in USD with two decimal places
+                    let formattedValue = floatValue.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 2
+                    });
+                    // final formatted value
+                    return formattedValue;
+                }
+            }
+
+            
+            // given a text field object, will update number value
+            function formatNumber(field) {
+                var num = field.value.toString();
+                inputValue = num.replace(/[^0-9.]/g, '');
+                
+                // Convert the value to a floating-point number
+                let floatValue = parseFloat(inputValue);
+              
+                // Check if the input is a valid number
+                if (!isNaN(floatValue)) {
+                    // Format the number
+                    let formattedValue = floatValue.toLocaleString('en-US');
+                    console.log("F:"+formattedValue);
+                    // final formatted value
+                    field.value=formattedValue;
+                    cal();
+                } else {
+
+                    console.log("woops");
+                }
+                
+            }
+
+            cal();
+        </script>
+
+
+    </body>
+</html>
